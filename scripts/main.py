@@ -424,43 +424,51 @@ if __name__ == '__main__':
     rospy.init_node('primitive_action_client')
     translationDistance = 0.15
     rotationAngle = 1.5708
+    nameIn = 'Right2'
     primitiveActionClient = PrimitiveActionClient(translationDistance, rotationAngle)
-    armTraGen = ArmTrajectoryGenerator(arm_prefix='jaco', filenameIn= 'demo1.dat')
+    armTraGen = ArmTrajectoryGenerator(arm_prefix='jaco', filenameIn=(nameIn + '.dat'))
 
 
-    # homePos = [-3.1363267851663794, 4.049387303842302, 0.8741868222972268,
-    #            0.9659132141954717, 1.858019715098542, 0.8635215945007593]
-    #
-    # handlePosMid = [-2.6277471728516915, 4.15765385690173, 1.0027724955256316,
-    #                 1.4330565699515623, 1.8879208888696246, 0.9407003357863918]
-    #
-    # handlePosLeft1 = [-2.7467960662165223, 4.378151610935385, 1.9107107567399233,
-    #                   0.45758117599362025, 2.1945211709485775, 1.4463970096420418]
-    #
-    # handlePosLeft2 = [-2.739850009461378, 4.197578370067544, 1.3345816612720294,
-    #                   0.994237663443173, 1.7966877809842896, 1.255771933555805]
-    #
-    # handlePosRight2 = [-2.354086864505656, 4.101280062946932, 0.7913477984307398,
-    #                    2.0100365453877367, 2.0283256710158013, 0.8485722726167357]
-    #
-    # handlePosRight1 = [-1.997455506082093, 4.127843496923819, 0.7323045849573016,
-    #                    2.5844012966334526, 2.1795570019414767, 0.8036523350362057]
-    #
-    # primitiveActionClient.executeOpenGripper()
-    # rospy.sleep(1.0)
-    #
-    # armTraGen.ang_pos_cmd(handlePosLeft1)
-    # rospy.sleep(3.0)
-    #
-    # primitiveActionClient.executeCloseGripper()
-    # rospy.sleep(1.0)
-    # primitiveActionClient.executeBackwardMotion()
-    #
-    # rospy.sleep(3.0)
-    # primitiveActionClient.executeOpenGripper()
-    # rospy.sleep(3.0)
-    #
-    # armTraGen.fileout.close()
+
+    homePos = [-3.1363267851663794, 4.049387303842302, 0.8741868222972268,
+               0.9659132141954717, 1.858019715098542, 0.8635215945007593]
+
+    handlePosMid = [-2.6277471728516915, 4.15765385690173, 1.0027724955256316,
+                    1.4330565699515623, 1.8879208888696246, 0.9407003357863918]
+
+    handlePosLeft1 = [-2.7467960662165223, 4.378151610935385, 1.9107107567399233,
+                      0.45758117599362025, 2.1945211709485775, 1.4463970096420418]
+
+    handlePosLeft2 = [-2.739850009461378, 4.197578370067544, 1.3345816612720294,
+                      0.994237663443173, 1.7966877809842896, 1.255771933555805]
+
+    handlePosRight2 = [-2.354086864505656, 4.101280062946932, 0.7913477984307398,
+                       2.0100365453877367, 2.0283256710158013, 0.8485722726167357]
+
+    handlePosRight1 = [-1.997455506082093, 4.127843496923819, 0.7323045849573016,
+                       2.5844012966334526, 2.1795570019414767, 0.8036523350362057]
+
+    name_dict = {'home': homePos,
+                 'Left1':handlePosLeft1, 'Left2':handlePosLeft2,
+                 'Right1':handlePosRight1, 'Right2':handlePosRight2,
+                 'Mid': handlePosMid}
+
+    primitiveActionClient.executeOpenGripper()
+    rospy.sleep(1.0)
+
+
+    armTraGen.ang_pos_cmd(name_dict[nameIn])
+    rospy.sleep(3.0)
+
+    primitiveActionClient.executeCloseGripper()
+    rospy.sleep(1.0)
+    primitiveActionClient.executeBackwardMotion()
+
+    rospy.sleep(3.0)
+    primitiveActionClient.executeOpenGripper()
+    rospy.sleep(3.0)
+
+    #armTraGen.fileout.close()
 
 
 
