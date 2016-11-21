@@ -192,14 +192,14 @@ class ArmTrajectoryGenerator:
         except rospy.ServiceException, e:
             print "Service call failed: %s" % e
 
-        print self.EEPose
+        #print self.EEPose
         self.last_js_update = rospy.get_time()
 
-        output_string = str(self.last_js_update) + ' ' + str(self.joint_states)[1:-1] + ' ' + \
+        output_string = str(self.last_js_update) + ' ' + str(self.joint_states).strip('[]') + ' ' + \
                         str(self.EEPose.handPose.pose.position.x) + ' ' + str(self.EEPose.handPose.pose.position.y) + ' ' + str(self.EEPose.handPose.pose.position.z) + ' ' + \
                         str(self.EEPose.handPose.pose.orientation.x) + ' ' + str(self.EEPose.handPose.pose.orientation.y) + ' ' + str(self.EEPose.handPose.pose.orientation.z) + str(self.EEPose.handPose.pose.orientation.w)+ ' ' + \
                         str(self.gripperPosition) + \
-                        str(self.joint_effort)[1:-1] + '\n'
+                        str(self.joint_effort).strip('[]') + '\n'
 
         self.fileout.write(output_string)
 
@@ -208,7 +208,7 @@ class ArmTrajectoryGenerator:
     def gripper_cb(self, gripperStat):
         self.gripperPosition = gripperStat.position
 
-        print self.gripperPosition
+        #print self.gripperPosition
 
 
     def get_pos(self):
@@ -426,8 +426,6 @@ if __name__ == '__main__':
     rotationAngle = 1.5708
     nameIn = 'Right2'
     primitiveActionClient = PrimitiveActionClient(translationDistance, rotationAngle)
-    armTraGen = ArmTrajectoryGenerator(arm_prefix='jaco', filenameIn=(nameIn + '.dat'))
-
 
 
     homePos = [-3.1363267851663794, 4.049387303842302, 0.8741868222972268,
@@ -448,10 +446,14 @@ if __name__ == '__main__':
     handlePosRight1 = [-1.997455506082093, 4.127843496923819, 0.7323045849573016,
                        2.5844012966334526, 2.1795570019414767, 0.8036523350362057]
 
+
     name_dict = {'home': homePos,
                  'Left1':handlePosLeft1, 'Left2':handlePosLeft2,
                  'Right1':handlePosRight1, 'Right2':handlePosRight2,
                  'Mid': handlePosMid}
+
+
+    armTraGen = ArmTrajectoryGenerator(arm_prefix='jaco', filenameIn=(nameIn + '.dat'))
 
     primitiveActionClient.executeOpenGripper()
     rospy.sleep(1.0)
@@ -460,13 +462,14 @@ if __name__ == '__main__':
     armTraGen.ang_pos_cmd(name_dict[nameIn])
     rospy.sleep(3.0)
 
-    primitiveActionClient.executeCloseGripper()
-    rospy.sleep(1.0)
-    primitiveActionClient.executeBackwardMotion()
+    if nameIn is not 'home':
+        primitiveActionClient.executeCloseGripper()
+        rospy.sleep(1.0)
+        primitiveActionClient.executeBackwardMotion()
 
-    rospy.sleep(3.0)
-    primitiveActionClient.executeOpenGripper()
-    rospy.sleep(3.0)
+        rospy.sleep(3.0)
+        primitiveActionClient.executeOpenGripper()
+        #rospy.sleep(3.0)
 
     #armTraGen.fileout.close()
 
@@ -485,6 +488,6 @@ if __name__ == '__main__':
     #
     # amtra.sendWaypointTrajectory(app1)
 
-    rospy.spin()
+    #rospy.spin()
 
 
