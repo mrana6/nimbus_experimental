@@ -424,12 +424,17 @@ if __name__ == '__main__':
     rospy.init_node('primitive_action_client')
     translationDistance = 0.15
     rotationAngle = 1.5708
-    nameIn = 'Right2'
+    nameIn = 'Right1'
     primitiveActionClient = PrimitiveActionClient(translationDistance, rotationAngle)
 
+    homePosLeft = [3.1372394504719496, 4.05805056686833, 1.2628873673562788,
+                0.9341327142221474, 1.8577667147949843, 1.2559876496041014]
 
-    homePos = [-3.1363267851663794, 4.049387303842302, 0.8741868222972268,
+    homePosMid = [-3.1363267851663794, 4.049387303842302, 0.8741868222972268,
                0.9659132141954717, 1.858019715098542, 0.8635215945007593]
+
+    homePosRight = [-3.137457829681336, 4.079511117880515, 0.5101199513996763,
+                 0.9659229347334505, 1.8556420448773192, 0.5371401507930248]
 
     handlePosMid = [-2.6277471728516915, 4.15765385690173, 1.0027724955256316,
                     1.4330565699515623, 1.8879208888696246, 0.9407003357863918]
@@ -447,7 +452,7 @@ if __name__ == '__main__':
                        2.5844012966334526, 2.1795570019414767, 0.8036523350362057]
 
 
-    name_dict = {'home': homePos,
+    name_dict = {'homeMid': homePosMid, 'homeLeft': homePosLeft, 'homeRight': homePosRight,
                  'Left1':handlePosLeft1, 'Left2':handlePosLeft2,
                  'Right1':handlePosRight1, 'Right2':handlePosRight2,
                  'Mid': handlePosMid}
@@ -462,7 +467,7 @@ if __name__ == '__main__':
     armTraGen.ang_pos_cmd(name_dict[nameIn])
     rospy.sleep(3.0)
 
-    if nameIn is not 'home':
+    if ((nameIn != 'homeMid') and (nameIn != 'homeLeft') and (nameIn != 'homeRight')):
         primitiveActionClient.executeCloseGripper()
         rospy.sleep(1.0)
         primitiveActionClient.executeBackwardMotion()
