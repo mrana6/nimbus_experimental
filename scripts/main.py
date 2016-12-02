@@ -424,7 +424,7 @@ if __name__ == '__main__':
     rospy.init_node('primitive_action_client')
     translationDistance = 0.15
     rotationAngle = 1.5708
-    nameIn = 'Right1'
+    nameIn = 'Mid'
     primitiveActionClient = PrimitiveActionClient(translationDistance, rotationAngle)
 
     homePosLeft = [3.1372394504719496, 4.05805056686833, 1.2628873673562788,
