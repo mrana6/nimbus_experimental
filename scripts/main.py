@@ -424,7 +424,7 @@ if __name__ == '__main__':
     rospy.init_node('primitive_action_client')
     translationDistance = 0.15
     rotationAngle = 1.5708
-    nameIn = 'Mid'
+    nameIn = 'Right'
     primitiveActionClient = PrimitiveActionClient(translationDistance, rotationAngle)
 
     homePosLeft = [3.1372394504719496, 4.05805056686833, 1.2628873673562788,
@@ -438,6 +438,12 @@ if __name__ == '__main__':
 
     handlePosMid = [-2.6277471728516915, 4.15765385690173, 1.0027724955256316,
                     1.4330565699515623, 1.8879208888696246, 0.9407003357863918]
+
+    handlePosLeft = [-2.7331502951070656, 4.220981430778833, 1.3454277842855407,
+                     1.002309638128176, 1.8954054367971833, 1.199323970564649]
+
+    handlePosRight = [-2.373208094816316, 4.1262871455827765, 0.7523627153394514,
+                      1.8944083492850576, 2.190316439061506, 0.7768972866188881]
 
     handlePosLeft1 = [-2.7467960662165223, 4.378151610935385, 1.9107107567399233,
                       0.45758117599362025, 2.1945211709485775, 1.4463970096420418]
@@ -455,7 +461,7 @@ if __name__ == '__main__':
     name_dict = {'homeMid': homePosMid, 'homeLeft': homePosLeft, 'homeRight': homePosRight,
                  'Left1':handlePosLeft1, 'Left2':handlePosLeft2,
                  'Right1':handlePosRight1, 'Right2':handlePosRight2,
-                 'Mid': handlePosMid}
+                 'Mid': handlePosMid, 'Left': handlePosLeft, 'Right': handlePosRight}
 
 
     armTraGen = ArmTrajectoryGenerator(arm_prefix='jaco', filenameIn=(nameIn + '.dat'))
@@ -467,7 +473,7 @@ if __name__ == '__main__':
     armTraGen.ang_pos_cmd(name_dict[nameIn])
     rospy.sleep(3.0)
 
-    if ((nameIn != 'homeMid') and (nameIn != 'homeLeft') and (nameIn != 'homeRight')):
+    if ((nameIn != 'homeMid') and (nameIn != 'homeLeft') and (nameIn != 'homeRight')): # and (nameIn != 'Mid')):
         primitiveActionClient.executeCloseGripper()
         rospy.sleep(1.0)
         primitiveActionClient.executeBackwardMotion()
